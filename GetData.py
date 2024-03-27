@@ -16,16 +16,15 @@ def get_binance_data(symbol, interval, limit):
 
 def parse_data(data):
     candles = []
-    closes = [float(item[4]) for item in data]  # Lấy giá đóng cửa của từng cây nến
+    closes = [float(item[4]) for item in data]  
 
-    # Tính toán RSI
+   
     delta = np.diff(closes)
     gain = delta * (delta > 0)
     loss = -delta * (delta < 0)
 
-    avg_gain = np.mean(gain[:14])  # Trung bình cộng lợi nhuận cho 14 cây nến đầu tiên
-    avg_loss = np.mean(loss[:14])  # Trung bình cộng lỗ cho 14 cây nến đầu tiên
-
+    avg_gain = np.mean(gain[:14]) 
+    avg_loss = np.mean(loss[:14])  
     for i in range(14, len(closes)):
         if avg_loss == 0:
             rs = 100
@@ -60,10 +59,10 @@ def save_to_csv(data, filename):
             writer.writerow(item)
 
 def main():
-    symbol = 'BTCUSDT'  # BTC/USDT là biểu tượng giao dịch của Bitcoin trên Binance
-    interval = '30m'  # Lấy dữ liệu theo từng 30 phút
-    limit = 1000  # Số lượng cây nến cần lấy mỗi lần
-    total_data_points = 300 # Tổng số điểm dữ liệu cần thu thập
+    symbol = 'BTCUSDT'  
+    interval = '30m'
+    limit = 1000
+    total_data_points = 300
     data = []
     remaining_data_points = total_data_points
 
@@ -76,7 +75,7 @@ def main():
             data.extend(parsed_data)
             remaining_data_points -= limit
             print(f"Collected {len(parsed_data)} data points. Remaining: {remaining_data_points}")
-            sleep(1)  # Đợi 1 giây trước khi gửi yêu cầu API tiếp theo
+            sleep(1) 
         else:
             print("Failed to collect data from Binance API. Stopping.")
             break
